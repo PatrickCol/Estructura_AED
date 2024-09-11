@@ -7,7 +7,7 @@
 
 //Vamos a hacer una cola. Aquí se usará una lista que de al frente y a la cola, y su respectiva lista.
 
-#define MAX_QUEUE_SIZE 6
+#define MAX_QUEUE_SIZE 100
 
 #include <iostream>
 
