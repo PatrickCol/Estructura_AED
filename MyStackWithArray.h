@@ -8,7 +8,7 @@
 //En este caso, el stack lo construimos con el uso de un array.
 //Se conformará de una lista de un máximo de tamaño y un valor top que será el índice al último valor agregado
 
-#define MAX_STACK_SIZE 10
+#define MAX_STACK_SIZE 100
 #include <iostream>
 
 template<typename T>
