@@ -31,21 +31,20 @@ class Hash_table_open_addresing {
 
     std::mt19937 rng;  // Generador de números aleatorios
 
-    // Función de hash universal: h(x) = ((a * x + b) % p) % m
-    int hashFunction(K key) {
-        return ((a * key + b) % p) % size;
-    }
+    int hashFunction(const K& key) {
+        if constexpr (std::is_same<K, std::string>::value) { // Si la clave es un std::string, usamos una función hash especial
+            const int pp = 73;  // Base
+            int hashValue = 0;
+            int p_pow = 1;
 
-    int hashFunction(const std::string &key) {
-        const int pp = 73;  // Base
-        int hashValue = 0;
-        int p_pow = 1;
-
-        for (char ch: key) {
-            hashValue = (hashValue + (ch - 'a' + 1) * p_pow) % size;  // Calcular hash
-            p_pow = (p_pow * pp) % size;  // Incrementar la potencia
+            for (char ch : key) {
+                hashValue = (hashValue + (ch - 'a' + 1) * p_pow) % size;
+                p_pow = (p_pow * pp) % size;
+            }
+            return hashValue;
+        } else { // Si no es un std::string, usamos la fórmula hash genérica
+            return ((a * key + b) % p) % size;
         }
-        return hashValue;
     }
 
 public:
@@ -65,17 +64,16 @@ public:
 
         int index = hashFunction(key);  // Hash original
 
-        //Mientras que el valor en el índice no sea vacío o sea distinto de key (para reemplazarlo), sigue bucle
         while ((table + index)->first != K() && (table + index)->first != key) {
-            index = (index + 1) % size;  // Linear probing, moverse al siguiente índice
+            index = (index + 1) % size;
         }
 
-        *(table + index) = Par<K, V>(key, value);  // Insertar el par
+        *(table + index) = Par<K, V>(key, value);
         count++;
     }
 
 
-    V search(const K &key) {
+    V search(const K &key) const{
         int index = hashFunction(key);
         int originalIndex = index;
 
@@ -89,6 +87,19 @@ public:
         return (table + index)->second;
     }
 
+    V& search(const K &key) {
+        int index = hashFunction(key);
+        int originalIndex = index;
+
+        while ((table + index)->first != key) {
+            index = (index + 1) % size;
+
+            if (index == originalIndex) {
+                throw std::out_of_range("Clave no encontrada");
+            }
+        }
+        return (table + index)->second;
+    }
 
     void remove(const K &key) {
         int index = hashFunction(key);
@@ -102,7 +113,6 @@ public:
             }
         }
 
-        // Marcar como borrado o eliminar el par
         (table + index)->first = Par<K, V>();  // Vaciar la celda
         count--;
     }
@@ -121,7 +131,7 @@ public:
             }
         }
 
-        delete[] table;  // Liberar la tabla vieja
+        delete[] table;
         table = newTable;
         size = newSize;
     }
