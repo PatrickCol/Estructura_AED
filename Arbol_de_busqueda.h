@@ -71,15 +71,15 @@ class BSTree {
         } else if (value > node->data) {
             node->right_child = remove(node->right_child, value);
         } else {
-            // Nodo encontrado
+            // Se ha encontrado el nodo
 
-            // Caso 1: Nodo sin hijos (hoja)
+            // Si es un nodo hoja, se elimina y se vuelve nullptr (para que el padre apunte a nullptr)
             if (node->left_child == nullptr && node->right_child == nullptr) {
                 delete node;
                 return nullptr;
             }
 
-            // Caso 2: Nodo con un solo hijo
+            // Si tiene solo un hijo, se retorna el hijo del nodo eliminado, así el padre del nodo eliminado apunta al hijo de este último +.
             if (node->left_child == nullptr) {
                 Node<T>* temp = node->right_child;
                 delete node;
@@ -91,8 +91,7 @@ class BSTree {
                 return temp;
             }
 
-            // Caso 3: Nodo con dos hijos
-            // Buscar el sucesor in-order (el nodo más pequeño del subárbol derecho)
+            // Si tiene dos hijos, se busca la rama más a la izquierda de la rama derecha del nodo a eliminar. Aún se preserva el orden.
             Node<T>* temp = findMin(node->right_child);
 
             // Reemplazar el valor del nodo por el del sucesor
