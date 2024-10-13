@@ -125,6 +125,12 @@ public:
         // Reinsertar todos los elementos de la tabla original
         for (int i = 0; i < size; ++i) {
             if ((table+i)->first != K()) {
+                int index = hashFunction(key);  // Hash original
+                while ((table + index)->first != K() && (table + index)->first != key) {
+                    index = (index + 1) % size;
+                }
+                *(newTable + index) = Par<K, V>(key, value);
+                
                 int newIndex = hashFunction((table+i)->first) % newSize;
                 (newTable+newIndex)->first = (table+i)->first;
                 (newTable+newIndex)->second = (table+i)->second;
