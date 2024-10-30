@@ -34,6 +34,21 @@ public:
         }
     }
 
+    int countEdgesInCycle() {
+        std::vector<int> state(vertices, 0); // 0 = no visitado, 1 = visitado en camino actual, 2 = completado
+        int edgeCount = 0;
+
+        // Buscar ciclos desde cada nodo
+        for (int i = 0; i < vertices; i++) {
+            if (state[i] == 0) { // Si el nodo no ha sido visitado
+                if (dfsCountEdges(i, state, edgeCount)) {
+                    return edgeCount; // Retorna el número de aristas del ciclo encontrado
+                }
+            }
+        }
+        return 0; // Si no hay ciclos
+    }
+
     //Verifica si hay una arista entre u y v
     bool hasEdge(int u, int v) {
         if (u >= 0 && u < vertices && v >= 0 && v < vertices) {
