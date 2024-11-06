@@ -19,16 +19,16 @@ class Queue {
 public:
     Queue() : frente(0), cola(0) {}
 
-    bool IsFull() {
-        return frente == (cola + 1) % MAX_QUEUE_SIZE;
+    bool isFull() {
+        return frente == ((cola + 1) % MAX_QUEUE_SIZE);
     }
 
-    bool IsEmpty() {
+    bool isEmpty() {
         return frente == cola;
     }
 
     T front() {
-        if (!(this->IsEmpty())) {
+        if (!(this->isEmpty())) {
             return lista[(frente+1)%MAX_QUEUE_SIZE];  // El frente apunta al elemento actual
         } else {
             throw std::out_of_range("La cola está vacía.");
@@ -36,16 +36,16 @@ public:
     }
 
     void enqueue(T value) {
-        if (!(this->IsFull())) {
-            lista[cola] = value;
+        if (!(this->isFull())) {
             cola = (cola + 1) % MAX_QUEUE_SIZE;
+            lista[cola] = value;
         } else {
             throw std::out_of_range("La cola esta llena");
         }
     }
 
     void dequeue() {
-        if (!(this->IsEmpty())) {
+        if (!(this->isEmpty())) {
             frente = (frente + 1) % MAX_QUEUE_SIZE;
         } else {
             throw std::out_of_range("La cola esta vacia");
